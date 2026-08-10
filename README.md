@@ -29,10 +29,10 @@ The devices on the selected track should collapse. The command works from any fo
 ## Set up a Bitwig-only keyboard shortcut
 
 1. Double-click [`Set Keyboard Shortcut.command`](Set%20Keyboard%20Shortcut.command).
-2. A Terminal window opens and asks for a shortcut. Enter modifiers and one key separated by `+`.
+2. A Terminal window opens and asks for a shortcut. Copy the exact command below and paste it into the Terminal prompt.
 
    ```text
-   control+option+command+=
+   control+command+shift+c
    ```
 
 3. Press Return. The shortcut is saved and starts automatically when you log in.
