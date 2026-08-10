@@ -15,7 +15,7 @@ The installer adds the Bitwig controller script, the `bitwig` terminal command, 
 1. Save your work and fully quit Bitwig Studio with `Command-Q`.
 2. Reopen Bitwig Studio.
 3. Open **Dashboard > Settings > Controllers**.
-4. Add **sillytina > Collapse Visible Devices**.
+4. Add hardware vendor **sillytina > Collapse Visible Devices**.
 5. Make sure its power icon is orange. This controller does not need a MIDI input.
 
 Test it in Terminal:
