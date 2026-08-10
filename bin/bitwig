@@ -1,0 +1,42 @@
+#!/bin/zsh
+# TINACOLLAPSE CLI
+
+set -euo pipefail
+
+readonly collapse_host="${BITWIG_COLLAPSE_HOST:-127.0.0.1}"
+readonly collapse_port="${BITWIG_COLLAPSE_PORT:-47612}"
+readonly collapse_token="BITWIG_COLLAPSE_V1"
+
+function show_usage()
+{
+   print -u2 "Usage: bitwig collapse all devices"
+}
+
+function is_supported_command()
+{
+   [[ $# -eq 3 && "$1" == "collapse" && "$2" == "all" && "$3" == "devices" ]] ||
+      [[ $# -eq 3 && "$1" == "trigger" && "$2" == "collapse" && "$3" == "all" ]] ||
+      [[ $# -eq 2 && "$1" == "collapse" && "$2" == "all" ]]
+}
+
+if ! is_supported_command "$@"
+then
+   show_usage
+   exit 64
+fi
+
+listener_filter=("-iUDP:${collapse_port}")
+if [[ "${TINACOLLAPSE_ALLOW_ANY_LISTENER:-0}" != "1" ]]
+then
+   listener_filter=(-a -c Bitwig "-iUDP:${collapse_port}")
+fi
+
+if ! /usr/sbin/lsof -nP "${listener_filter[@]}" >/dev/null 2>&1
+then
+   print -u2 "SillyTina's Collapse Visible Devices controller is not listening."
+   print -u2 "Enable sillytina > Collapse Visible Devices, then fully restart Bitwig."
+   exit 69
+fi
+
+print -n -- "$collapse_token" | /usr/bin/nc -u -w 1 "$collapse_host" "$collapse_port"
+print "Collapse command sent to Bitwig."
