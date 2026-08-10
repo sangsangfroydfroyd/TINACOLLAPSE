@@ -25,7 +25,7 @@ https://www.icloud.com/shortcuts/846ddb0fb03f40aebf32ad509b3430fd
 - Press the ( i ) at the top right of the shortcut
 	- on the bottom of the info screen will be a "create keyboard shortcut"
 	- create your chosen command (MAKE SURE ITS NOT AN ACTIVE COMMAND IN BITWIG OR BOTH WILL TRIGGER)
-		- I used: ⌃⌥⌘=
+		- I used: ⌥⌘c
 
 the terminal command to trigger the collapse devices is below if youd prefer to make the shortcut yourself:
 ```
