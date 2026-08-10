@@ -42,23 +42,11 @@ The helper registers the combination only while **Bitwig Studio is the active ap
 
 Use at least two modifiers. Supported modifier names are `control`, `option`, `shift`, and `command`. If the setup says a combination is already in use, choose another one or remove its previous assignment.
 
-You can also reopen the setup from Terminal:
+The same keyboard-command setup can be opened from Terminal:
 
 ```sh
 tinacollapse-set-hotkey
 ```
-
-## Apple Shortcut alternative
-
-1. Double-click [`Shortcuts/Collapse All Trigger.shortcut`](Shortcuts/Collapse%20All%20Trigger.shortcut).
-2. Choose **Add Shortcut** to save it in the Shortcuts app.
-3. In Shortcuts, double-click **Collapse All Trigger** to open it.
-4. Click the **Details** button (`i`) at the top right.
-5. Click **Add Keyboard Shortcut**.
-6. Press the key combination you want to use. For example: `⌃⌥⌘=`.
-7. With Bitwig open, press that combination to collapse the selected track's devices.
-
-Choose a combination that is not already assigned in Bitwig or reserved by macOS. The native setup above is recommended because it releases the combination whenever Bitwig is not active.
 
 ## Troubleshooting
 
@@ -70,7 +58,7 @@ If Terminal says the controller is not listening:
 
 If Terminal cannot find the `bitwig` command, open a new Terminal window and try again.
 
-If the keyboard setup reports that a combination is in use, remove that combination from the Apple Shortcut or choose a different one.
+If the keyboard setup reports that a combination is in use, choose another combination or remove the existing macOS or Bitwig assignment.
 
 If your Bitwig Controller Scripts folder is in a custom location, install with:
 
