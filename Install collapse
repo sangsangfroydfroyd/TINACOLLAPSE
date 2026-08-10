@@ -6,11 +6,16 @@ set -euo pipefail
 readonly repository_root="${0:A:h}"
 readonly source_controller="${repository_root}/controller/Collapse Visible Devices.control.js"
 readonly source_command="${repository_root}/bin/bitwig"
+readonly source_hotkey_helper="${repository_root}/hotkey/tinacollapse-hotkey"
+readonly source_hotkey_setup="${repository_root}/Set Keyboard Shortcut.command"
 readonly bitwig_scripts_dir="${BITWIG_CONTROLLER_SCRIPTS_DIR:-${HOME}/Documents/Bitwig Studio/Controller Scripts}"
 readonly controller_install_dir="${bitwig_scripts_dir}/Collapse Visible Devices"
 readonly controller_destination="${controller_install_dir}/Collapse Visible Devices.control.js"
 readonly command_install_dir="${TINACOLLAPSE_BIN_DIR:-${HOME}/.local/bin}"
 readonly command_destination="${command_install_dir}/bitwig"
+readonly hotkey_helper_install_dir="${TINACOLLAPSE_HOTKEY_HELPER_DIR:-${HOME}/.local/lib/TINACOLLAPSE}"
+readonly hotkey_helper_destination="${hotkey_helper_install_dir}/tinacollapse-hotkey"
+readonly hotkey_setup_destination="${command_install_dir}/tinacollapse-set-hotkey"
 readonly backup_timestamp="$(date +%Y%m%d-%H%M%S)"
 
 function fail()
@@ -104,20 +109,26 @@ function configure_command_path()
 
 verify_source_file "$source_controller"
 verify_source_file "$source_command"
+verify_source_file "$source_hotkey_helper"
+verify_source_file "$source_hotkey_setup"
 
 install_with_backup "$source_controller" "$controller_destination" 0644
 install_with_backup "$source_command" "$command_destination" 0755
+install_with_backup "$source_hotkey_helper" "$hotkey_helper_destination" 0755
+install_with_backup "$source_hotkey_setup" "$hotkey_setup_destination" 0755
 configure_command_path
 
 print
 print "TINACOLLAPSE installation complete."
 print "Controller: $controller_destination"
 print "Command:    $command_destination"
+print "Hotkey:     $hotkey_helper_destination"
 print
 print "1. Fully quit and reopen Bitwig Studio."
 print "2. Add: sillytina > Collapse Visible Devices"
 print "3. Run: bitwig collapse all devices"
+print "4. Optional: double-click 'Set Keyboard Shortcut.command'"
 if [[ ":${PATH}:" != *":${command_install_dir}:"* ]]
 then
-   print "4. Open a new Terminal window before running the command."
+   print "5. Open a new Terminal window before running the command."
 fi

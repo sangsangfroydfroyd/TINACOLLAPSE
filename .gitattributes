@@ -1,2 +1,5 @@
 *.shortcut binary
 *.control.js text eol=lf
+*.command text eol=lf
+*.m text eol=lf
+hotkey/tinacollapse-hotkey binary

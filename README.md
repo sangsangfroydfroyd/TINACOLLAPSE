@@ -6,20 +6,9 @@ No MIDI controller or IAC Driver is required. TINACOLLAPSE currently supports ma
 
 ## Install
 
-1. Open Terminal and clone the repository:
+Double-click **Install collapse**.
 
-   ```sh
-   git clone https://github.com/sangsangfroydfroyd/TINACOLLAPSE.git
-   cd TINACOLLAPSE
-   ```
-
-2. Run the installer:
-
-   ```sh
-   "./Install collapse"
-   ```
-
-The installer adds the Bitwig controller script and installs the `bitwig` terminal command for the current user. It does not need `sudo`.
+The installer adds the Bitwig controller script, the `bitwig` terminal command, and the optional native keyboard-shortcut helper for the current user. It does not need `sudo`.
 
 ## Set up Bitwig
 
@@ -37,7 +26,29 @@ bitwig collapse all devices
 
 The devices on the selected track should collapse. The command works from any folder.
 
-## Set up the keyboard shortcut
+## Set up a Bitwig-only keyboard shortcut
+
+1. Double-click [`Set Keyboard Shortcut.command`](Set%20Keyboard%20Shortcut.command).
+2. A Terminal window opens and asks for a shortcut. Enter modifiers and one key separated by `+`.
+
+   ```text
+   control+option+command+=
+   ```
+
+3. Press Return. The shortcut is saved and starts automatically when you log in.
+4. Reopen **Set Keyboard Shortcut.command** whenever you want to replace it with a different combination.
+
+The helper registers the combination only while **Bitwig Studio is the active application**. When another app is active, the combination is released and behaves normally. It does not require Accessibility or Input Monitoring permission.
+
+Use at least two modifiers. Supported modifier names are `control`, `option`, `shift`, and `command`. If the setup says a combination is already in use, choose another one or remove its previous assignment.
+
+You can also reopen the setup from Terminal:
+
+```sh
+tinacollapse-set-hotkey
+```
+
+## Apple Shortcut alternative
 
 1. Double-click [`Shortcuts/Collapse All Trigger.shortcut`](Shortcuts/Collapse%20All%20Trigger.shortcut).
 2. Choose **Add Shortcut** to save it in the Shortcuts app.
@@ -47,7 +58,7 @@ The devices on the selected track should collapse. The command works from any fo
 6. Press the key combination you want to use. For example: `⌃⌥⌘=`.
 7. With Bitwig open, press that combination to collapse the selected track's devices.
 
-Choose a combination that is not already assigned in Bitwig or reserved by macOS. If the same combination is assigned in Bitwig, both commands may run.
+Choose a combination that is not already assigned in Bitwig or reserved by macOS. The native setup above is recommended because it releases the combination whenever Bitwig is not active.
 
 ## Troubleshooting
 
@@ -58,6 +69,8 @@ If Terminal says the controller is not listening:
 3. Fully quit and reopen Bitwig Studio.
 
 If Terminal cannot find the `bitwig` command, open a new Terminal window and try again.
+
+If the keyboard setup reports that a combination is in use, remove that combination from the Apple Shortcut or choose a different one.
 
 If your Bitwig Controller Scripts folder is in a custom location, install with:
 
