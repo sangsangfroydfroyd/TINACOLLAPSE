@@ -19,7 +19,7 @@ The "collapse all" is triggered by a terminal command that triggers the bitwig c
 to turn this into a keyboard shortcut:
 
 Download this shortcut command and save to your shortcuts:
-https://www.icloud.com/shortcuts/31494b153510483aa622b58b5af97133
+https://www.icloud.com/shortcuts/846ddb0fb03f40aebf32ad509b3430fd
 
 - Open shortcut and edit
 - Press the ( i ) at the top right of the shortcut
