@@ -1,0 +1,123 @@
+#!/bin/zsh
+# TINACOLLAPSE installer for macOS
+
+set -euo pipefail
+
+readonly repository_root="${0:A:h}"
+readonly source_controller="${repository_root}/controller/Collapse Visible Devices.control.js"
+readonly source_command="${repository_root}/bin/bitwig"
+readonly bitwig_scripts_dir="${BITWIG_CONTROLLER_SCRIPTS_DIR:-${HOME}/Documents/Bitwig Studio/Controller Scripts}"
+readonly controller_install_dir="${bitwig_scripts_dir}/Collapse Visible Devices"
+readonly controller_destination="${controller_install_dir}/Collapse Visible Devices.control.js"
+readonly command_install_dir="${TINACOLLAPSE_BIN_DIR:-${HOME}/.local/bin}"
+readonly command_destination="${command_install_dir}/bitwig"
+readonly backup_timestamp="$(date +%Y%m%d-%H%M%S)"
+
+function fail()
+{
+   print -u2 "TINACOLLAPSE install failed: $1"
+   exit 1
+}
+
+function verify_source_file()
+{
+   [[ -f "$1" ]] || fail "missing package file: $1"
+}
+
+function install_with_backup()
+{
+   local source_file="$1"
+   local destination_file="$2"
+   local mode="$3"
+
+   /bin/mkdir -p "${destination_file:h}"
+
+   if [[ -f "$destination_file" ]] && ! /usr/bin/cmp -s "$source_file" "$destination_file"
+   then
+      local backup_file="${destination_file}.backup-${backup_timestamp}"
+      /bin/cp -p "$destination_file" "$backup_file"
+      print "Backed up existing file: $backup_file"
+   fi
+
+   if [[ -f "$destination_file" ]] && /usr/bin/cmp -s "$source_file" "$destination_file"
+   then
+      /bin/chmod "$mode" "$destination_file"
+      print "Already current: $destination_file"
+      return
+   fi
+
+   /usr/bin/install -m "$mode" "$source_file" "$destination_file"
+   print "Installed: $destination_file"
+}
+
+function shell_profile_path()
+{
+   if [[ -n "${TINACOLLAPSE_SHELL_PROFILE:-}" ]]
+   then
+      print -r -- "$TINACOLLAPSE_SHELL_PROFILE"
+      return
+   fi
+
+   case "${SHELL:-/bin/zsh}" in
+      */zsh) print -r -- "${HOME}/.zprofile" ;;
+      */bash) print -r -- "${HOME}/.bash_profile" ;;
+      *) print -r -- "${HOME}/.profile" ;;
+   esac
+}
+
+function configure_command_path()
+{
+   [[ "${TINACOLLAPSE_SKIP_PATH_UPDATE:-0}" == "1" ]] && return
+   [[ ":${PATH}:" == *":${command_install_dir}:"* ]] && return
+
+   local profile
+   profile="$(shell_profile_path)"
+   /bin/mkdir -p "${profile:h}"
+   /usr/bin/touch "$profile"
+
+   if /usr/bin/grep -Fq '# >>> TINACOLLAPSE >>>' "$profile"
+   then
+      print "PATH setup already present: $profile"
+      return
+   fi
+
+   local path_line
+   if [[ "$command_install_dir" == "${HOME}/.local/bin" ]]
+   then
+      path_line='export PATH="$HOME/.local/bin:$PATH"'
+   else
+      path_line="export PATH=\"${command_install_dir}:\$PATH\""
+   fi
+
+   {
+      print
+      print '# >>> TINACOLLAPSE >>>'
+      print -r -- "$path_line"
+      print '# <<< TINACOLLAPSE <<<'
+   } >> "$profile"
+
+   print "Added the bitwig command to PATH in: $profile"
+}
+
+[[ "${TINACOLLAPSE_SKIP_OS_CHECK:-0}" == "1" || "$(uname -s)" == "Darwin" ]] ||
+   fail "the automatic installer currently supports macOS only"
+
+verify_source_file "$source_controller"
+verify_source_file "$source_command"
+
+install_with_backup "$source_controller" "$controller_destination" 0644
+install_with_backup "$source_command" "$command_destination" 0755
+configure_command_path
+
+print
+print "TINACOLLAPSE installation complete."
+print "Controller: $controller_destination"
+print "Command:    $command_destination"
+print
+print "1. Fully quit and reopen Bitwig Studio."
+print "2. Add: sillytina > Collapse Visible Devices"
+print "3. Run: bitwig collapse all devices"
+if [[ ":${PATH}:" != *":${command_install_dir}:"* ]]
+then
+   print "4. Open a new Terminal window before running the command."
+fi
